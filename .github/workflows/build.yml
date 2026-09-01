@@ -1,4 +1,4 @@
-name: Build Android Java
+name: Build Java
 
 on: [push]
 
@@ -15,13 +15,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Compile Java to Class
+      - name: Compile Java
         run: |
-          mkdir -p bin
-          javac -d bin MainActivity.java
-          jar cvf app.jar -C bin .
+          javac MainActivity.java
+          jar cvf app.jar MainActivity.class
 
-      - name: Upload Built Artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: compiled-output
