@@ -18,13 +18,12 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Compile and Convert to Dex
+      - name: Compile Java and Convert to Dex
         run: |
-          # অ্যান্ড্রয়েড জার ফাইল স্বয়ংক্রিয়ভাবে খুঁজে বের করে কম্পাইল করা
-          ANDROID_JAR=$ANDROID_HOME/platforms/$(ls $ANDROID_HOME/platforms | head -n 1)/android.jar
-          javac -cp $ANDROID_JAR MainActivity.java
+          # প্রথমে সাধারণ জাভা ক্লাস ফাইল তৈরি (অ্যান্ড্রয়েড লাইব্রেরি ছাড়াই টেস্টের জন্য)
+          javac MainActivity.java
           
-          # ডি-এইট (d8) দিয়ে ডেক্স ফাইল তৈরি
+          # ডি-এইট (d8) দিয়ে ডেক্স ফাইলে রূপান্তর
           d8 MainActivity.class --output .
 
       - name: Upload Dex Artifact
