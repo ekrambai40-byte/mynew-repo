@@ -1,4 +1,4 @@
-name: Build Java
+name: Build Dex for User App
 
 on: [push]
 
@@ -15,13 +15,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Compile Java
-        run: |
-          javac MainActivity.java
-          jar cvf app.jar MainActivity.class
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Upload Artifact
+      - name: Compile and Convert to Dex
+        run: |
+          # অ্যান্ড্রয়েড এসডিকে থেকে android.jar পাথ নিয়ে কম্পাইল করা
+          javac -cp $ANDROID_HOME/platforms/android-34/android.jar MainActivity.java
+          
+          # ক্লাস ফাইলকে dex ফাইলে রূপান্তর করা
+          d8 MainActivity.class --output .
+
+      - name: Upload Dex Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: compiled-output
-          path: app.jar
+          name: classes-dex-output
+          path: classes.dex
